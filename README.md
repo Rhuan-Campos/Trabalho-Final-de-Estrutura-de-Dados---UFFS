@@ -62,4 +62,4 @@ Outras funcionalidades (opcional).
 
 ---
 
-### 🐎 Discentes: Matheus Zuchi Balbinot e Rhuan Campos da Silva.
+### 🐎 Discentes: Matheus Zuchi Balbinot e Rhuan Lehmen de Souza Leite.
