@@ -51,7 +51,6 @@
 
 // Obs.: O programa deve ser entregue via SIGAA no espaço disponível para o efeito, nomeado com <matricula-TF>.zip, até o dia indicado no sistema. Para aqueles que fizerem em dupla, o nome do arquivo deve ser <matricula1-matricula2-TF>.zip e apenas um deve submeter o trabalho.
 
-//É possível fazer um encadeamento duplo mas não sei se não será somente desperdício de linha
 
 #include <stdio.h>
 #include <string.h>
@@ -63,7 +62,7 @@ typedef struct producao{
    Fardo tipoDeFardo;  
    int qtDeFardos;
    float duracao;
-   struct Producao *prox;
+   struct Producao *prox *prev;
 } Producao;
 
 typedef struct fardo{
@@ -84,8 +83,25 @@ typedef struct data{
 //    struct Nos *prox = NULL;
 // } Nos;
 
-void incluirProducao(){
+void incluirProducao(Producao *ultimo, int codigo, int dia, int mes, int ano, char cultivar, char tipoDeFeno, int diametro, int qtDeFardos, float duracao) {
+    Producao novoNo = malloc(sizeof(Producao));
+    if (novoNo == NULL) {
+        printf("Erro: Não foi possível alocar memória.\n");
+        return;
+    }
 
+    novoNo->codigo = codigo;
+    novoNo->dataProducao.dia = dia;
+    novoNo->dataProducao.mes = mes;
+    novoNo->dataProducao.ano = ano;
+    strcpy(novoNo->tipoDeFardo.cultivar, cultivar);
+    novoNo->tipoDeFardo.tipoDeFeno = tipoDeFeno;
+    novoNo->tipoDeFardo.diametro = diametro;
+    novoNo->qtDeFardos = qtDeFardos;
+    novoNo->duracao = duracao;
+    novoNo->prox = NULL;
+    novoNo->prev = ultimo; //Ultimo tem que apontar para o último elemento da lista;
+    ultimo->prox = novoNo;
 }
 
 int consultar(){
@@ -107,7 +123,12 @@ int listarTodos(){
 int main(){
   int continuar = 1;
   Producao inicio = malloc(sizeof(Producao));
-
+    //Adicionando dados bases
+    incluirProducao(&inicio, 1,, 10, 12, 2023, "Cultivar A", 'A', 100, 5, 3.5);
+    incluirProducao(&inicio, 2, 15, 11, 2023, "Cultivar B", 'B', 120, 7, 4.2);
+    incluirProducao(&inicio, 3, 20, 10, 2023, "Cultivar C", 'C', 140, 3, 2.1);
+    incluirProducao(&inicio, 4, 25, 9, 2023, "Cultivar D", 'D', 160, 6, 4.8);
+    incluirProducao(&inicio, 5, 30, 8, 2023, "Cultivar E", 'E', 130, 4, 3.0);
   while(continuar){
     int opcao;
     printf("Bem vindo ao Sistema de Acompanhamento de Produção Agrícola X\nDigite a opção que deseja:\n\t1.Incluir Produção\n\t2.Consultar\n\t3.Alterar\n\t4.Excluir\n\t5.Listar todos\n\t6.Sair");
