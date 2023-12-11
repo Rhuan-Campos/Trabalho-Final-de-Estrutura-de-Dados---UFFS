@@ -27,7 +27,7 @@
 
 // Incluir Produção: permite o registro de um período de produção. **Não permitir duplicação do código de produção**, ou seja, se o código 10 já existir e o usuário tentar inserir uma nova produção com o código 10, o sistema deverá avisar que o código já existe e a produção não poderá ser incluída.
 
-// Consultar: permite fazer consultas: pela data e pelo cultivar. A consulta por data exibe a quantidade de fardos produzidos naquele dia, indicando o tipo de feno (A, B ou C) e cultivar, no seguinte formato: “<data>: <cultivar> - <tipoDeFeno> - <qtDeFardos>”. Já a consulta por cultivar exibe o resultado no seguinte formato: <cultivar>: <tipoDeFeno> - <soma da quantidade de fardos>. Caso houver mais de um tipoDeFeno, exibir cada um em uma nova linha. Mostrar uma mensagem ao usuário caso não haja registros com a chave de busca utilizada.
+// Consultar: permite fazer consultas: pela data e pelo cultivar. A consulta por data exibe a quantidade de fardos produzidos naquele dia, indicando o tipo de feno (A, B ou C) e cultivar, no seguinte formato: “<data>: <cultivar> - <tipoDeFeno> - <gzBundleQuantity>”. Já a consulta por cultivar exibe o resultado no seguinte formato: <cultivar>: <tipoDeFeno> - <soma da quantidade de fardos>. Caso houver mais de um tipoDeFeno, exibir cada um em uma nova linha. Mostrar uma mensagem ao usuário caso não haja registros com a chave de busca utilizada.
 
 // Alterar: permite alterar qualquer campo do registro de produção. A busca do registro para alteração deve ser realizada por código.
 
@@ -56,115 +56,128 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct producao{
-   int codigo;
-   Data dataProducao;
-   Fardo tipoDeFardo;  
-   int qtDeFardos;
-   float duracao;
-   struct Producao *prox *prev;
-} Producao;
+typedef struct production{
+   int id;
+   Data prodDate;
+   GrazingBundle gzBundleType;  
+   int gzBundleQuantity;
+   float duration;
+   struct Production *prox;
+   struct Production *prev;
+} Production;
 
-typedef struct fardo{
+typedef struct grazingBundle {
    char cultivar[20];
-   char tipoDeFeno;
-   int diametro; //80cm a 160cm e Altura de 150cm 
-} Fardo;
+   char bundleType;
+   int diameter; //80cm a 160cm e Altura de 150cm 
+} GrazingBundle;
 
 typedef struct data{
-   int dia;
-   int mes;
-   int ano;
+   int day;
+   int month;
+   int year;
 } Data;
 
-// typedef struct nos{
-//    Producao producao;
-//   //  struct Nos *ante = NULL;
-//    struct Nos *prox = NULL;
-// } Nos;
-
-void incluirProducao(Producao *ultimo, int codigo, int dia, int mes, int ano, char cultivar, char tipoDeFeno, int diametro, int qtDeFardos, float duracao) {
-    Producao novoNo = malloc(sizeof(Producao));
-    if (novoNo == NULL) {
+void insertProduction(Production **last, int id, int day, int month, int year, char cultivar[], char bundleType, int diameter, int gzBundleQuantity, float duration) {
+    Production *newNode = malloc(sizeof(Production));
+    if (newNode == NULL) {
         printf("Erro: Não foi possível alocar memória.\n");
         return;
     }
 
-    novoNo->codigo = codigo;
-    novoNo->dataProducao.dia = dia;
-    novoNo->dataProducao.mes = mes;
-    novoNo->dataProducao.ano = ano;
-    strcpy(novoNo->tipoDeFardo.cultivar, cultivar);
-    novoNo->tipoDeFardo.tipoDeFeno = tipoDeFeno;
-    novoNo->tipoDeFardo.diametro = diametro;
-    novoNo->qtDeFardos = qtDeFardos;
-    novoNo->duracao = duracao;
-    novoNo->prox = NULL;
-    novoNo->prev = ultimo; //Ultimo tem que apontar para o último elemento da lista;
-    ultimo->prox = novoNo;
-}
+    newNode->id = id;
+    newNode->prodDate.day = day;
+    newNode->prodDate.month = month;
+    newNode->prodDate.year = year;
+    strcpy(newNode->gzBundleType.cultivar, cultivar);
+    newNode->gzBundleType.bundleType = bundleType;
+    newNode->gzBundleType.diameter = diameter;
+    newNode->gzBundleQuantity = gzBundleQuantity;
+    newNode->duration = duration;
+    newNode->prox = NULL;
 
-int consultar(){
-
-}
-
-int alterar(){
-
-}
-
-int excluir(){
-
-}
-
-int listarTodos(){
-
-}
-
-int main(){
-  int continuar = 1;
-  Producao inicio = malloc(sizeof(Producao));
-    //Adicionando dados bases
-    incluirProducao(&inicio, 1,, 10, 12, 2023, "Cultivar A", 'A', 100, 5, 3.5);
-    incluirProducao(&inicio, 2, 15, 11, 2023, "Cultivar B", 'B', 120, 7, 4.2);
-    incluirProducao(&inicio, 3, 20, 10, 2023, "Cultivar C", 'C', 140, 3, 2.1);
-    incluirProducao(&inicio, 4, 25, 9, 2023, "Cultivar D", 'D', 160, 6, 4.8);
-    incluirProducao(&inicio, 5, 30, 8, 2023, "Cultivar E", 'E', 130, 4, 3.0);
-  while(continuar){
-    int opcao;
-    printf("Bem vindo ao Sistema de Acompanhamento de Produção Agrícola X\nDigite a opção que deseja:\n\t1.Incluir Produção\n\t2.Consultar\n\t3.Alterar\n\t4.Excluir\n\t5.Listar todos\n\t6.Sair");
-    scanf("%d", &opcao);
-
-    switch (opcao){
-    case 1:
-      incluirProducao();
-      break;
-    
-    case 2:
-      consultar();
-      break;
-    
-    case 3:
-      alterar();
-      break;
-
-    case 4:
-      excluir();
-      break;
-
-    case 5:
-      listarTodos();
-      break;
-
-    case 6:
-      printf("Programa encerrado!");
-      continuar = 0;
-      break;      
-    default:
-      printf("Opção inválida, tente novamente!");
-      break;
+    if (*last != NULL) {
+        (*last)->prox = newNode;
     }
-  }
+    newNode->prev = *last;
+    *last = newNode;
+}
 
+int getProduction(){
 
-  return 0;
+}
+
+int changeData(){
+
+}
+
+int deleteData(){
+
+}
+
+int listAll(){
+
+}
+
+int reverseListAll(){
+
+}
+
+void showMenu() {
+    printf("Bem vindo ao Sistema de Acompanhamento de Produção Agrícola X\n");
+    printf("Digite a opção desejada:\n");
+    printf("\t1. Incluir Produção\n");
+    printf("\t2. Consultar\n");
+    printf("\t3. Alterar\n");
+    printf("\t4. Excluir\n");
+    printf("\t5. Listar todos\n");
+    printf("\t6. Listar de maneira inversa\n");
+    printf("\t7. Sair\n");
+}
+
+int main() {
+    Production *begin = malloc(sizeof(Production));
+
+    // Adding generic sample data...
+    insertProduction(&begin, 1, 10, 12, 2023, "Cultivar A", 'A', 100, 5, 3.5);
+    insertProduction(&begin, 2, 15, 11, 2023, "Cultivar B", 'B', 120, 7, 4.2);
+    insertProduction(&begin, 3, 20, 10, 2023, "Cultivar C", 'C', 140, 3, 2.1);
+    insertProduction(&begin, 4, 25, 9, 2023, "Cultivar D", 'D', 160, 6, 4.8);
+    insertProduction(&begin, 5, 30, 8, 2023, "Cultivar E", 'E', 130, 4, 3.0);
+
+    while (1) {
+        showMenu();
+
+        int chosenOption;
+        scanf("%d", &chosenOption);
+
+        switch (chosenOption) {
+            case 1:
+                insertProduction();
+                break;
+            case 2:
+                getProduction();
+                break;
+            case 3:
+                changeData();
+                break;
+            case 4:
+                delete();
+                break;
+            case 5:
+                listAll();
+                break;
+            case 6:
+                reverseListAll();
+                break;
+            case 7:
+                printf("Programa encerrado!");
+                exit(0); // Encerra o programa imediatamente
+            default:
+                printf("Opção inválida, tente novamente!\n");
+                break;
+        }
+    }
+
+    return 0;
 }
