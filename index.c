@@ -56,33 +56,34 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct production{
-   int id;
-   Data prodDate;
-   GrazingBundle gzBundleType;  
-   int gzBundleQuantity;
-   float duration;
-   struct Production *prox;
-   struct Production *prev;
-} Production;
-
-typedef struct grazingBundle {
-   char cultivar[20];
-   char bundleType;
-   int diameter; //80cm a 160cm e Altura de 150cm 
-} GrazingBundle;
-
-typedef struct data{
-   int day;
-   int month;
-   int year;
+typedef struct data {
+    int day;
+    int month;
+    int year;
 } Data;
 
-void insertProduction(Production **last, int id, int day, int month, int year, char cultivar[], char bundleType, int diameter, int gzBundleQuantity, float duration) {
+typedef struct grazingBundle {
+    char cultivar[20];
+    char bundleType;
+    int diameter; // 80cm a 160cm e Altura de 150cm 
+} GrazingBundle;
+
+typedef struct production {
+    int id;
+    Data prodDate;
+    GrazingBundle gzBundleType;
+    int gzBundleQuantity;
+    float duration;
+    struct production *next;
+    struct production *prev;
+} Production;
+
+// Função para inserir um novo nó na lista duplamente encadeada
+Production* insertProduction(Production *head, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration) {
     Production *newNode = malloc(sizeof(Production));
     if (newNode == NULL) {
-        printf("Erro: Não foi possível alocar memória.\n");
-        return;
+        fprintf(stderr, "Erro de alocação de memória\n");
+        exit(EXIT_FAILURE);
     }
 
     newNode->id = id;
@@ -94,13 +95,24 @@ void insertProduction(Production **last, int id, int day, int month, int year, c
     newNode->gzBundleType.diameter = diameter;
     newNode->gzBundleQuantity = gzBundleQuantity;
     newNode->duration = duration;
-    newNode->prox = NULL;
+    newNode->next = NULL;
+    newNode->prev = NULL;
 
-    if (*last != NULL) {
-        (*last)->prox = newNode;
+    if (head == NULL) {
+        // Se a lista estiver vazia, o novo nó se torna a cabeça da lista
+        head = newNode;
+    } else {
+        // Encontra o último nó da lista
+        Production *lastNode = head;
+        while (lastNode->next != NULL) {
+            lastNode = lastNode->next;
+        }
+        // Adiciona o novo nó após o último nó
+        lastNode->next = newNode;
+        newNode->prev = lastNode;
     }
-    newNode->prev = *last;
-    *last = newNode;
+
+    return head;
 }
 
 int getProduction(){
@@ -115,8 +127,20 @@ int deleteData(){
 
 }
 
-int listAll(){
+void printProductionList(Production *head) {
+    Production *current = head;
+    while (current != NULL) {
+        printf("ID: %d\n", current->id);
+        printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
+        printf("Cultivar: %s\n", current->gzBundleType.cultivar);
+        printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
+        printf("Diameter: %d\n", current->gzBundleType.diameter);
+        printf("Quantity: %d\n", current->gzBundleQuantity);
+        printf("Duration: %.2f\n", current->duration);
+        printf("\n");
 
+        current = current->next;
+    }
 }
 
 int reverseListAll(){
@@ -135,15 +159,30 @@ void showMenu() {
     printf("\t7. Sair\n");
 }
 
-int main() {
-    Production *begin = malloc(sizeof(Production));
+void freeProductionList(Production *head) {
+    Production *current = head;
+    while (current != NULL) {
+        Production *temp = current;
+        current = current->next;
+        free(temp);
+    }
+}
 
-    // Adding generic sample data...
-    insertProduction(&begin, 1, 10, 12, 2023, "Cultivar A", 'A', 100, 5, 3.5);
-    insertProduction(&begin, 2, 15, 11, 2023, "Cultivar B", 'B', 120, 7, 4.2);
-    insertProduction(&begin, 3, 20, 10, 2023, "Cultivar C", 'C', 140, 3, 2.1);
-    insertProduction(&begin, 4, 25, 9, 2023, "Cultivar D", 'D', 160, 6, 4.8);
-    insertProduction(&begin, 5, 30, 8, 2023, "Cultivar E", 'E', 130, 4, 3.0);
+Production* addSampleData(Production *head) {
+
+	freeProductionList(head);
+
+    head = insertProduction(head, 1, 5, 3, 2023, "Cultivar A", 'A', 120, 5, 10.5);
+    head = insertProduction(head, 2, 10, 6, 2023, "Cultivar B", 'B', 100, 8, 7.2);
+    head = insertProduction(head, 3, 15, 9, 2023, "Cultivar C", 'C', 140, 3, 12.8);
+    head = insertProduction(head, 4, 20, 12, 2023, "Cultivar D", 'D', 130, 4, 8.0);
+    head = insertProduction(head, 5, 25, 5, 2023, "Cultivar E", 'E', 150, 6, 15.3);
+    return head;
+}
+
+int main() {
+    Production *head = NULL;
+    head = addSampleData(head);
 
     while (1) {
         showMenu();
@@ -152,9 +191,9 @@ int main() {
         scanf("%d", &chosenOption);
 
         switch (chosenOption) {
-            case 1:
-                insertProduction();
-                break;
+            // case 1:
+            //     insertProduction();
+            //     break;
             case 2:
                 getProduction();
                 break;
@@ -162,10 +201,10 @@ int main() {
                 changeData();
                 break;
             case 4:
-                delete();
+                deleteData();
                 break;
             case 5:
-                listAll();
+                printProductionList(head);
                 break;
             case 6:
                 reverseListAll();
