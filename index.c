@@ -143,8 +143,23 @@ void printProductionList(Production *head) {
     }
 }
 
-int reverseListAll(){
+void productionInfo(Production *begin) {
+    Production *current = begin;
+    printf("ID: %d\n", current->id);
+    printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
+    printf("Cultivar: %s\n", current->gzBundleType.cultivar);
+    printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
+    printf("Diameter: %d\n", current->gzBundleType.diameter);
+    printf("Quantity: %d\n", current->gzBundleQuantity);
+    printf("Duration: %.2f\n", current->duration);
+}
 
+void printReverseProductionList(Production *begin){
+    Production *current = begin;
+    if(begin->next != NULL) {
+        printReverseProductionList(begin->next);
+    }
+    printf("\n");
 }
 
 void showMenu() {
@@ -207,11 +222,11 @@ int main() {
                 printProductionList(head);
                 break;
             case 6:
-                reverseListAll();
+                printReverseProductionList(head);
                 break;
             case 7:
                 printf("Programa encerrado!");
-                exit(0); // Encerra o programa imediatamente
+                exit(0);
             default:
                 printf("Opção inválida, tente novamente!\n");
                 break;
