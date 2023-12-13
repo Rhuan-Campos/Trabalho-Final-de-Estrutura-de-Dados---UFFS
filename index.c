@@ -78,7 +78,6 @@ typedef struct production {
     struct production *prev;
 } Production;
 
-// Função para inserir um novo nó na lista duplamente encadeada
 Production* insertProduction(Production *head, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration) {
     Production *newNode = malloc(sizeof(Production));
     if (newNode == NULL) {
@@ -99,15 +98,12 @@ Production* insertProduction(Production *head, int id, int day, int month, int y
     newNode->prev = NULL;
 
     if (head == NULL) {
-        // Se a lista estiver vazia, o novo nó se torna a cabeça da lista
         head = newNode;
     } else {
-        // Encontra o último nó da lista
         Production *lastNode = head;
         while (lastNode->next != NULL) {
             lastNode = lastNode->next;
         }
-        // Adiciona o novo nó após o último nó
         lastNode->next = newNode;
         newNode->prev = lastNode;
     }
@@ -138,20 +134,8 @@ void printProductionList(Production *head) {
         printf("Quantity: %d\n", current->gzBundleQuantity);
         printf("Duration: %.2f\n", current->duration);
         printf("\n");
-
         current = current->next;
     }
-}
-
-void productionInfo(Production *begin) {
-    Production *current = begin;
-    printf("ID: %d\n", current->id);
-    printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
-    printf("Cultivar: %s\n", current->gzBundleType.cultivar);
-    printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
-    printf("Diameter: %d\n", current->gzBundleType.diameter);
-    printf("Quantity: %d\n", current->gzBundleQuantity);
-    printf("Duration: %.2f\n", current->duration);
 }
 
 void printReverseProductionList(Production *begin){
@@ -159,6 +143,13 @@ void printReverseProductionList(Production *begin){
     if(begin->next != NULL) {
         printReverseProductionList(begin->next);
     }
+    printf("ID: %d\n", current->id);
+    printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
+    printf("Cultivar: %s\n", current->gzBundleType.cultivar);
+    printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
+    printf("Diameter: %d\n", current->gzBundleType.diameter);
+    printf("Quantity: %d\n", current->gzBundleQuantity);
+    printf("Duration: %.2f\n", current->duration);
     printf("\n");
 }
 
@@ -172,6 +163,7 @@ void showMenu() {
     printf("\t5. Listar todos\n");
     printf("\t6. Listar de maneira inversa\n");
     printf("\t7. Sair\n");
+    printf("\nEscolha uma das ações acima: ");
 }
 
 void freeProductionList(Production *head) {
@@ -184,9 +176,7 @@ void freeProductionList(Production *head) {
 }
 
 Production* addSampleData(Production *head) {
-
 	freeProductionList(head);
-
     head = insertProduction(head, 1, 5, 3, 2023, "Cultivar A", 'A', 120, 5, 10.5);
     head = insertProduction(head, 2, 10, 6, 2023, "Cultivar B", 'B', 100, 8, 7.2);
     head = insertProduction(head, 3, 15, 9, 2023, "Cultivar C", 'C', 140, 3, 12.8);
