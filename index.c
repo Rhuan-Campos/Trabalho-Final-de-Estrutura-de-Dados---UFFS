@@ -123,34 +123,32 @@ int deleteData(){
 
 }
 
-void printProductionList(Production *head) {
-    Production *current = head;
-    while (current != NULL) {
-        printf("ID: %d\n", current->id);
-        printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
-        printf("Cultivar: %s\n", current->gzBundleType.cultivar);
-        printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
-        printf("Diameter: %d\n", current->gzBundleType.diameter);
-        printf("Quantity: %d\n", current->gzBundleQuantity);
-        printf("Duration: %.2f\n", current->duration);
+void printProductionDetails(Production *node) {
+    if (node != NULL) {
+        printf("ID: %d\n", node->id);
+        printf("Date: %d/%d/%d\n", node->prodDate.day, node->prodDate.month, node->prodDate.year);
+        printf("Cultivar: %s\n", node->gzBundleType.cultivar);
+        printf("Bundle Type: %c\n", node->gzBundleType.bundleType);
+        printf("Diameter: %d\n", node->gzBundleType.diameter);
+        printf("Quantity: %d\n", node->gzBundleQuantity);
+        printf("Duration: %.2f\n", node->duration);
         printf("\n");
+    }
+}
+
+void showProductionList(Production *begin) {
+    Production *current = begin;
+    while (current != NULL) {
+        printProductionDetails(current);
         current = current->next;
     }
 }
 
-void printReverseProductionList(Production *begin){
-    Production *current = begin;
-    if(begin->next != NULL) {
-        printReverseProductionList(begin->next);
+void showReverseProductionList(Production *begin){
+    if (begin != NULL) {
+        showReverseProductionList(begin->next);
+        printProductionDetails(begin);
     }
-    printf("ID: %d\n", current->id);
-    printf("Date: %d/%d/%d\n", current->prodDate.day, current->prodDate.month, current->prodDate.year);
-    printf("Cultivar: %s\n", current->gzBundleType.cultivar);
-    printf("Bundle Type: %c\n", current->gzBundleType.bundleType);
-    printf("Diameter: %d\n", current->gzBundleType.diameter);
-    printf("Quantity: %d\n", current->gzBundleQuantity);
-    printf("Duration: %.2f\n", current->duration);
-    printf("\n");
 }
 
 void showMenu() {
@@ -209,10 +207,10 @@ int main() {
                 deleteData();
                 break;
             case 5:
-                printProductionList(head);
+                showProductionList(head);
                 break;
             case 6:
-                printReverseProductionList(head);
+                showReverseProductionList(head);
                 break;
             case 7:
                 printf("Programa encerrado!");
