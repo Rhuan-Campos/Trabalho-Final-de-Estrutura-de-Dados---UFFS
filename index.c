@@ -111,12 +111,62 @@ Production* insertProduction(Production *head, int id, int day, int month, int y
     return head;
 }
 
-int getProduction(){
-
+void findProductionByIdForShow(Production *begin, int searchedId) {
+    Production *current = begin;
+    while (current != NULL) {
+        if (current->id == searchedId) {
+            printf("Resultado: \n");
+            printProductionDetails(current);
+            return;
+        }
+        current = current->next;
+    }
+    printf("Produção com o ID %d não encontrada.\n", searchedId);
 }
 
-int changeData(){
+void getIdForSearch(Production *begin) {
+    int searchedId = 0;
+    printf("\nDigite o id do projeto que deseja obter informações: ");
+    scanf("%d", &searchedId);
+    printf("\n");
 
+    findProductionByIdForShow(begin, searchedId);
+}
+
+void findProductionByIdForDelete(Production *begin, int searchedId) {
+    Production *current = begin;
+    while (current != NULL) {
+        if (current->id == searchedId) {
+            if (current == begin) {
+                begin = current->next;
+                if (begin != NULL) {
+                    begin->prev = NULL;
+                }
+                free(current);
+            } else {
+                if (current->prev != NULL) {
+                    current->prev->next = current->next;
+                }
+                if (current->next != NULL) {
+                    current->next->prev = current->prev;
+                }
+                free(current);
+            }
+            printf("Elemento com o ID %d deletado!! \n", searchedId);
+            return;
+        }
+        current = current->next;
+    }
+    printf("Produção com o ID %d não encontrada.\n", searchedId);
+}
+
+void getIdForDeleteData(Production *begin){
+    int searchedId = 0;
+    printf("\nDigite o id do elemento que desejas deletar: ");
+    scanf("%d", &searchedId);
+    printf("\n");
+
+    findProductionByIdForDelete(begin, searchedId);
 }
 
 int deleteData(){
@@ -194,17 +244,17 @@ int main() {
         scanf("%d", &chosenOption);
 
         switch (chosenOption) {
-            // case 1:
-            //     insertProduction();
-            //     break;
+            case 1:
+                // insertProduction();
+                // break;
             case 2:
-                getProduction();
+                getIdForSearch(head);
                 break;
             case 3:
-                changeData();
-                break;
+                // getIdForChangeData();
+                // break;
             case 4:
-                deleteData();
+                getIdForDeleteData(head);
                 break;
             case 5:
                 showProductionList(head);
