@@ -5,32 +5,30 @@
 
 int main() {
     Production *head = NULL;
-
-    head = insertProduction(head, 1, 5, 3, 2023, "Cultivar A", 'A', 120, 5, 10.5);
-    head = insertProduction(head, 2, 10, 6, 2023, "Cultivar B", 'B', 100, 8, 7.2);
-    head = insertProduction(head, 3, 15, 9, 2023, "Cultivar C", 'C', 140, 3, 12.8);
+    head = addSampleData(head);
 
     while (1) {
         showMenu();
-        
+
         int chosenOption;
         scanf("%d", &chosenOption);
 
+
         switch (chosenOption) {
-            // case 1:
-            //     insertProduction();
-            //     break;
+            case 1:
+                // insertProduction(head);
+                // break;
             case 2:
-                getIdForSearch(head);
+                getProduction(head);
                 break;
             case 3:
-                // getIdForChangeData();
-                // break;
+                getIdForChangeData(head);
+                break;
             case 4:
-                deleteData();
+                getIdForDeleteData(head);
                 break;
             case 5:
-                printProductionList(head);
+                showProductionList(head);
                 break;
             case 6:
                 showReverseProductionList(head);

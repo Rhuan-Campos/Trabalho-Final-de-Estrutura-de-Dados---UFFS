@@ -24,17 +24,29 @@ typedef struct production {
     struct production *prev;
 } Production;
 
+void updateProductionData(Production *target);
+
+void getIdForChangeData(Production *head);
+
+void getProduction(Production *prod);
+
 Production* insertProduction(Production *head, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration);
 
-int getProduction();
+void findProductionByIdForDelete(Production *begin, int searchedId);
 
-int changeData();
+Production* findProductionById(Production *head, int idToSearch);
 
-int deleteData();
+void getIdForDeleteData(Production *begin);
 
-void printProductionList(Production *head);
+void printProductionDetails(Production *node);
 
-int reverseListAll();
+void showProductionList(Production *begin);
+
+void showReverseProductionList(Production *begin);
 
 void showMenu();
+
+void freeProductionList(Production *head);
+
+Production* addSampleData(Production *head);
 
