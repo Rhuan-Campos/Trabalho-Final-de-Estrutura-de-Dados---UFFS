@@ -47,13 +47,13 @@ void updateProductionData(Production *target) { //Alterar
     }
 }
 
-void getIdForChangeData(Production *head) {
+void changeProduction(Production *begin) {
     int idToSearch;
     printf("\nDigite o ID do registro que deseja alterar: ");
     scanf("%d", &idToSearch);
     printf("\n");
 
-    Production *target = findProductionById(head, idToSearch);
+    Production *target = findProductionById(begin, idToSearch);
 
     if (target != NULL) {
         printf("Registro encontrado. Insira os novos dados:\n");
@@ -64,8 +64,8 @@ void getIdForChangeData(Production *head) {
     }
 }
 
-Production* findProductionById(Production *head, int idToSearch) {
-    Production *current = head;
+Production* findProductionById(Production *begin, int idToSearch) {
+    Production *current = begin;
     while (current != NULL) {
         if (current->id == idToSearch) {
             return current; 
@@ -79,7 +79,7 @@ void getProduction(Production *prod) { //Consultar
     int option;
     printf("Por qual das seguintes opções deseja consultar?\n1. Data\n2. Cultivar\n");
     scanf("%d", &option);
-    char searchCultivar[20];
+    char searchGzBundle[20];
 
     switch (option) {
         case 1: {
@@ -113,16 +113,15 @@ void getProduction(Production *prod) { //Consultar
             break;
         }
         case 2:
-            // Lógica para consulta por cultivar
-           printf("Insira o cultivar que deseja consultar: ");
-            scanf("%s", searchCultivar);
-
             int found = 0;
-
             Production *current = prod;
+
+            printf("Insira o cultivar que deseja consultar: ");
+            scanf("%s", searchGzBundle);
+
             // Lógica para consulta por cultivar
             while (current != NULL) {
-                if (strcmp(current->gzBundleType.cultivar, searchCultivar) == 0) {
+                if (strcmp(current->gzBundleType.cultivar, searchGzBundle) == 0) {
                     found = 1;
                     break;
                 }
@@ -137,7 +136,7 @@ void getProduction(Production *prod) { //Consultar
 
                 current = prod; // Reiniciando a busca
                 while (current != NULL) {
-                    if (strcmp(current->gzBundleType.cultivar, searchCultivar) == 0) {
+                    if (strcmp(current->gzBundleType.cultivar, searchGzBundle) == 0) {
                         // Verifica se o tipo de feno já foi registrado
                         int tipoJaRegistrado = 0;
                         for (int i = 0; i < quantidadeDeTipos; ++i) {
@@ -162,7 +161,7 @@ void getProduction(Production *prod) { //Consultar
 
                 if (quantidadeDeTipos > 0) {
                     for (int i = 0; i < quantidadeDeTipos; ++i) {
-                        printf("%s: ", searchCultivar);
+                        printf("%s: ", searchGzBundle);
                         printf("%s - %d", tiposDeFeno[i], totalQuantity);
                         if (i < quantidadeDeTipos - 1) {
                             printf("\n");
@@ -183,7 +182,7 @@ void getProduction(Production *prod) { //Consultar
 
 
 //Inserir produção
-Production* insertProduction(Production *head, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration) {
+Production* insertProduction(Production *begin, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration) {
     Production *newNode = malloc(sizeof(Production));
     if (newNode == NULL) {
         fprintf(stderr, "Erro de alocação de memória\n");
@@ -202,10 +201,10 @@ Production* insertProduction(Production *head, int id, int day, int month, int y
     newNode->next = NULL;
     newNode->prev = NULL;
 
-    if (head == NULL) {
-        head = newNode;
+    if (begin == NULL) {
+        begin = newNode;
     } else {
-        Production *lastNode = head;
+        Production *lastNode = begin;
         while (lastNode->next != NULL) {
             lastNode = lastNode->next;
         }
@@ -213,7 +212,7 @@ Production* insertProduction(Production *head, int id, int day, int month, int y
         newNode->prev = lastNode;
     }
 
-    return head;
+    return begin;
 }
 
 void findProductionByIdForDelete(Production *begin, int searchedId) {
@@ -243,7 +242,7 @@ void findProductionByIdForDelete(Production *begin, int searchedId) {
     printf("Produção com o ID %d não encontrada.\n", searchedId);
 }
 
-void getIdForDeleteData(Production *begin){
+void deleteProduction(Production *begin){
     int searchedId = 0;
     printf("\nDigite o id do elemento que desejas deletar: ");
     scanf("%d", &searchedId);
@@ -293,8 +292,8 @@ void showMenu() {
     printf("\nEscolha uma das ações acima: ");
 }
 
-void freeProductionList(Production *head) {
-    Production *current = head;
+void freeProductionList(Production *begin) {
+    Production *current = begin;
     while (current != NULL) {
         Production *temp = current;
         current = current->next;
@@ -302,12 +301,12 @@ void freeProductionList(Production *head) {
     }
 }
 
-Production* addSampleData(Production *head) {
-	freeProductionList(head);
-    head = insertProduction(head, 1, 5, 3, 2023, "Coastcross", 'A', 120, 5, 10.5);
-    head = insertProduction(head, 2, 10, 6, 2023, "Jiggs", 'B', 100, 8, 7.2);
-    head = insertProduction(head, 3, 15, 9, 2023, "Florakirk", 'C', 140, 3, 12.8);
-    head = insertProduction(head, 4, 20, 12, 2023, "Florakirk", 'D', 130, 4, 8.0);
-    head = insertProduction(head, 5, 25, 5, 2023, "Tifton 85", 'E', 150, 6, 15.3);
-    return head;
+Production* addSampleData(Production *begin) {
+	freeProductionList(begin);
+    begin = insertProduction(begin, 1, 5, 3, 2023, "Coastcross", 'A', 120, 5, 10.5);
+    begin = insertProduction(begin, 2, 10, 6, 2023, "Jiggs", 'B', 100, 8, 7.2);
+    begin = insertProduction(begin, 3, 15, 9, 2023, "Florakirk", 'C', 140, 3, 12.8);
+    begin = insertProduction(begin, 4, 20, 12, 2023, "Florakirk", 'D', 130, 4, 8.0);
+    begin = insertProduction(begin, 5, 25, 5, 2023, "Tifton 85", 'E', 150, 6, 15.3);
+    return begin;
 }

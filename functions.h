@@ -11,7 +11,7 @@ typedef struct data {
 typedef struct grazingBundle {
     char cultivar[20];
     char bundleType;
-    int diameter; // 80cm a 160cm e Altura de 150cm 
+    int diameter;
 } GrazingBundle;
 
 typedef struct production {
@@ -24,29 +24,20 @@ typedef struct production {
     struct production *prev;
 } Production;
 
-void updateProductionData(Production *target);
+// Funções principais
 
-void getIdForChangeData(Production *head);
-
+void deleteProduction(Production *begin);
+void changeProduction(Production *begin);
 void getProduction(Production *prod);
-
-Production* insertProduction(Production *head, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration);
-
-void findProductionByIdForDelete(Production *begin, int searchedId);
-
-Production* findProductionById(Production *head, int idToSearch);
-
-void getIdForDeleteData(Production *begin);
-
-void printProductionDetails(Production *node);
-
 void showProductionList(Production *begin);
-
 void showReverseProductionList(Production *begin);
+void findProductionByIdForDelete(Production *begin, int searchedId);
+Production* insertProduction(Production *begin, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration);
 
+// Funções auxiliares
+
+Production* findProductionById(Production *begin, int idToSearch);
+Production* addSampleData(Production *begin);
+void printProductionDetails(Production *node);
+void freeProductionList(Production *begin);
 void showMenu();
-
-void freeProductionList(Production *head);
-
-Production* addSampleData(Production *head);
-
