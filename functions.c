@@ -5,6 +5,109 @@
 
 // Função para inserir um novo nó na lista duplamente encadeada
 
+int isCultivarValid(const char *cultivar) {
+  const char *cultivarValidos[] = {"Tifton-85", "Florakirk", "Jiggs", "Coastcross"};
+  int numCultivaresValidos = sizeof(cultivarValidos) / sizeof(cultivarValidos[0]);
+
+  for (int i = 0; i < numCultivaresValidos; ++i) {
+    if (strcmp(cultivar, cultivarValidos[i]) == 0) {
+      return 1; // O cultivar é válido
+    }
+  }
+  return 0; // O cultivar não é válido
+}
+
+int isProductionCodeDuplicate(Production *begin, int newId) {
+    Production *current = begin;
+
+    while (current != NULL) {
+        if (current->id == newId) {
+            // Código de produção já existe na lista
+            return 1;
+        }
+        current = current->next;
+    }
+
+    // Código de produção não encontrado na lista
+    return 0;
+}
+
+void addProduction(Production **begin) {
+    int newId;
+    printf("Digite o novo código de produção: ");
+    scanf("%d", &newId);
+
+    // Verificar se o código de produção já existe
+    if (isProductionCodeDuplicate(*begin, newId)) {
+        printf("O código de produção já existe. A produção não pode ser incluída.\n");
+        return;
+    }
+
+    Production *newProduction = (Production*)malloc(sizeof(Production));
+    if (newProduction == NULL) {
+        printf("Erro ao alocar memória para a nova produção.\n");
+        return;
+    }
+
+    newProduction->id = newId;
+
+  
+    printf("Digite a data de produção (dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &newProduction->prodDate.day, &newProduction->prodDate.month, &newProduction->prodDate.year);
+
+    printf("Digite o cultivar (Tifton-85, Florakirk, Jiggs, Coastcross): ");
+    scanf("%s", newProduction->gzBundleType.cultivar);
+    if (!isCultivarValid(newProduction->gzBundleType.cultivar)) {
+        printf("Cultivar inválido. Por favor, insira um cultivar válido.\n");
+        free(newProduction);
+        return;
+    }
+
+    printf("Digite o tipo de fardo (A, B ou C): ");
+    scanf(" %c", &newProduction->gzBundleType.bundleType);
+    if (!isBundleTypeValid(newProduction->gzBundleType.bundleType)) {
+        printf("Tipo de fardo inválido. Por favor, insira um tipo de fardo válido.\n");
+        free(newProduction);
+        return;
+    }
+
+    printf("Digite o diâmetro do fardo (80 a 160 cm): ");
+    scanf("%d", &newProduction->gzBundleType.diameter);
+    if (newProduction->gzBundleType.diameter < 80 || newProduction->gzBundleType.diameter > 160) {
+        printf("Por favor, insira um diâmetro válido (entre 80 e 160 cm).\n");
+        return;
+    }
+
+    printf("Digite a quantidade de fardos: ");
+    scanf("%d", &newProduction->gzBundleQuantity);
+
+    printf("Digite a duração da produção (em dias): ");
+    scanf("%f", &newProduction->duration);
+
+    newProduction->next = NULL;
+    newProduction->prev = *begin;
+
+    if (*begin != NULL) {
+        Production *last = *begin;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        last->next = newProduction;
+        newProduction->prev = last;
+} else {
+        *begin = newProduction;
+}
+
+    printf("Produção adicionada com sucesso!\n");
+}
+
+
+
+// Função para verificar se o tipo de fardo é válido
+int isBundleTypeValid(char bundleType) {
+    return (bundleType == 'A' || bundleType == 'B' || bundleType == 'C');
+}
+
 void updateProductionData(Production *target) { //Alterar
     int choice;
     int updateMore = 1;
@@ -84,12 +187,8 @@ void getProduction(Production *prod) { //Consultar
     switch (option) {
         case 1: {
             int day, month, year;
-            printf("Insira o dia que deseja consultar: ");
-            scanf("%d", &day);
-            printf("Insira o mês que deseja consultar: ");
-            scanf("%d", &month);
-            printf("Insira o ano que deseja consultar: ");
-            scanf("%d", &year);
+            printf("Insira o data que deseja consultar (dd/mm/aaaa): ");
+            scanf("%d/%d/%d", &day, &month, &year);
 
             int totalQuantity = 0;
             int found = 0;
@@ -113,6 +212,10 @@ void getProduction(Production *prod) { //Consultar
             break;
         }
         case 2:
+            // Lógica para consulta por cultivar
+           printf("Insira o cultivar que deseja consultar (Tifton-85, Florakirk, Jiggs, Coastcross): ");
+            scanf("%s", searchGzBundle);
+
             int found = 0;
             Production *current = prod;
 
@@ -182,38 +285,6 @@ void getProduction(Production *prod) { //Consultar
 
 
 //Inserir produção
-Production* insertProduction(Production *begin, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration) {
-    Production *newNode = malloc(sizeof(Production));
-    if (newNode == NULL) {
-        fprintf(stderr, "Erro de alocação de memória\n");
-        exit(EXIT_FAILURE);
-    }
-
-    newNode->id = id;
-    newNode->prodDate.day = day;
-    newNode->prodDate.month = month;
-    newNode->prodDate.year = year;
-    strcpy(newNode->gzBundleType.cultivar, cultivar);
-    newNode->gzBundleType.bundleType = bundleType;
-    newNode->gzBundleType.diameter = diameter;
-    newNode->gzBundleQuantity = gzBundleQuantity;
-    newNode->duration = duration;
-    newNode->next = NULL;
-    newNode->prev = NULL;
-
-    if (begin == NULL) {
-        begin = newNode;
-    } else {
-        Production *lastNode = begin;
-        while (lastNode->next != NULL) {
-            lastNode = lastNode->next;
-        }
-        lastNode->next = newNode;
-        newNode->prev = lastNode;
-    }
-
-    return begin;
-}
 
 void findProductionByIdForDelete(Production *begin, int searchedId) {
     Production *current = begin;
@@ -235,7 +306,7 @@ void findProductionByIdForDelete(Production *begin, int searchedId) {
                 free(current);
             }
             printf("Elemento com o ID %d deletado!! \n", searchedId);
-            return ;
+            return;
         }
         current = current->next;
     }
@@ -299,14 +370,4 @@ void freeProductionList(Production *begin) {
         current = current->next;
         free(temp);
     }
-}
-
-Production* addSampleData(Production *begin) {
-	freeProductionList(begin);
-    begin = insertProduction(begin, 1, 5, 3, 2023, "Coastcross", 'A', 120, 5, 10.5);
-    begin = insertProduction(begin, 2, 10, 6, 2023, "Jiggs", 'B', 100, 8, 7.2);
-    begin = insertProduction(begin, 3, 15, 9, 2023, "Florakirk", 'C', 140, 3, 12.8);
-    begin = insertProduction(begin, 4, 20, 12, 2023, "Florakirk", 'D', 130, 4, 8.0);
-    begin = insertProduction(begin, 5, 25, 5, 2023, "Tifton 85", 'E', 150, 6, 15.3);
-    return begin;
 }

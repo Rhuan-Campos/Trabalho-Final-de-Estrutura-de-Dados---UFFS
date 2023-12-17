@@ -4,9 +4,7 @@
 #include "functions.h"
 
 int main() {
-    Production *begin = NULL;
-    begin = addSampleData(begin);
-
+    Production *head = NULL;
     while (1) {
         showMenu();
 
@@ -16,22 +14,22 @@ int main() {
 
         switch (chosenOption) {
             case 1:
-                // insertProduction(begin);
-                // break;
+                addProduction(&head);
+                break;
             case 2:
-                getProduction(begin);
+                getProduction(head);
                 break;
             case 3:
-                changeProduction(begin);
+                changeProduction(head);
                 break;
             case 4:
-                deleteProduction(begin);
+                deleteProduction(head);
                 break;
             case 5:
-                showProductionList(begin);
+                showProductionList(head);
                 break;
             case 6:
-                showReverseProductionList(begin);
+                showReverseProductionList(head);
                 break;
             case 7:
                 printf("Programa encerrado!");
