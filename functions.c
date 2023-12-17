@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "functions.h"
 
-// Função para inserir um novo nó na lista duplamente encadeada
-
 int isCultivarValid(const char *cultivar) {
   const char *cultivarValidos[] = {"Tifton-85", "Florakirk", "Jiggs", "Coastcross"};
   int numCultivaresValidos = sizeof(cultivarValidos) / sizeof(cultivarValidos[0]);
