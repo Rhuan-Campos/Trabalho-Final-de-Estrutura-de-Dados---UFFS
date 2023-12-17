@@ -25,19 +25,20 @@ typedef struct production {
 } Production;
 
 // Funções principais
-
-void deleteProduction(Production *begin);
+void addProduction(Production **begin);
+void updateProductionData(Production *target);
 void changeProduction(Production *begin);
 void getProduction(Production *prod);
+void deleteProduction(Production *begin);
 void showProductionList(Production *begin);
 void showReverseProductionList(Production *begin);
-void findProductionByIdForDelete(Production *begin, int searchedId);
-Production* insertProduction(Production *begin, int id, int day, int month, int year, const char *cultivar, char bundleType, int diameter, int gzBundleQuantity, float duration);
 
 // Funções auxiliares
-
 Production* findProductionById(Production *begin, int idToSearch);
-Production* addSampleData(Production *begin);
 void printProductionDetails(Production *node);
 void freeProductionList(Production *begin);
 void showMenu();
+int isFarmValid(const char *cultivar);
+int isProductionCodeDuplicate(Production *begin, int newId);
+int isBundleTypeValid(char bundleType);
+void findProductionByIdForDelete(Production *begin, int searchedId);

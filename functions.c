@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include "functions.h"
 
-int isCultivarValid(const char *cultivar) {
-  const char *cultivarValidos[] = {"Tifton-85", "Florakirk", "Jiggs", "Coastcross"};
-  int numCultivaresValidos = sizeof(cultivarValidos) / sizeof(cultivarValidos[0]);
+int isFarmValid(const char *cultivar) {
+  const char *validFarm[] = {"Tifton-85", "Florakirk", "Jiggs", "Coastcross"};
+  int farmSize = sizeof(validFarm) / sizeof(validFarm[0]);
 
-  for (int i = 0; i < numCultivaresValidos; ++i) {
-    if (strcmp(cultivar, cultivarValidos[i]) == 0) {
+  for (int i = 0; i < farmSize ; ++i) {
+    if (strcmp(cultivar, validFarm[i]) == 0) {
       return 1;
     }
   }
@@ -50,7 +50,7 @@ void addProduction(Production **begin) {
 
     printf("Digite o cultivar (Tifton-85, Florakirk, Jiggs, Coastcross): ");
     scanf("%s", newProduction->gzBundleType.cultivar);
-    if (!isCultivarValid(newProduction->gzBundleType.cultivar)) {
+    if (!isFarmValid(newProduction->gzBundleType.cultivar)) {
         printf("Cultivar inválido. Por favor, insira um cultivar válido.\n");
         free(newProduction);
         return;

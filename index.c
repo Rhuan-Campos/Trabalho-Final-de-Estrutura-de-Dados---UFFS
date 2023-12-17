@@ -33,6 +33,7 @@ int main() {
                 break;
             case 7:
                 printf("Programa encerrado!");
+                freeProductionList(head);
                 exit(0);
             default:
                 printf("Opção inválida, tente novamente!\n");
