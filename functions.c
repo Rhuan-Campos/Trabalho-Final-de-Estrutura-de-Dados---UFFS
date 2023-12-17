@@ -11,10 +11,10 @@ int isCultivarValid(const char *cultivar) {
 
   for (int i = 0; i < numCultivaresValidos; ++i) {
     if (strcmp(cultivar, cultivarValidos[i]) == 0) {
-      return 1; // O cultivar é válido
+      return 1;
     }
   }
-  return 0; // O cultivar não é válido
+  return 0;
 }
 
 int isProductionCodeDuplicate(Production *begin, int newId) {
@@ -22,13 +22,10 @@ int isProductionCodeDuplicate(Production *begin, int newId) {
 
     while (current != NULL) {
         if (current->id == newId) {
-            // Código de produção já existe na lista
             return 1;
         }
         current = current->next;
     }
-
-    // Código de produção não encontrado na lista
     return 0;
 }
 
@@ -37,7 +34,6 @@ void addProduction(Production **begin) {
     printf("Digite o novo código de produção: ");
     scanf("%d", &newId);
 
-    // Verificar se o código de produção já existe
     if (isProductionCodeDuplicate(*begin, newId)) {
         printf("O código de produção já existe. A produção não pode ser incluída.\n");
         return;
@@ -50,7 +46,6 @@ void addProduction(Production **begin) {
     }
 
     newProduction->id = newId;
-
   
     printf("Digite a data de produção (dd/mm/aaaa): ");
     scanf("%d/%d/%d", &newProduction->prodDate.day, &newProduction->prodDate.month, &newProduction->prodDate.year);
@@ -101,9 +96,6 @@ void addProduction(Production **begin) {
     printf("Produção adicionada com sucesso!\n");
 }
 
-
-
-// Função para verificar se o tipo de fardo é válido
 int isBundleTypeValid(char bundleType) {
     return (bundleType == 'A' || bundleType == 'B' || bundleType == 'C');
 }
@@ -212,7 +204,6 @@ void getProduction(Production *prod) { //Consultar
             break;
         }
         case 2:
-            // Lógica para consulta por cultivar
            printf("Insira o cultivar que deseja consultar (Tifton-85, Florakirk, Jiggs, Coastcross): ");
             scanf("%s", searchGzBundle);
 
@@ -222,7 +213,6 @@ void getProduction(Production *prod) { //Consultar
             printf("Insira o cultivar que deseja consultar: ");
             scanf("%s", searchGzBundle);
 
-            // Lógica para consulta por cultivar
             while (current != NULL) {
                 if (strcmp(current->gzBundleType.cultivar, searchGzBundle) == 0) {
                     found = 1;
@@ -232,15 +222,13 @@ void getProduction(Production *prod) { //Consultar
             }
 
             if (found) {
-                // Array para armazenar os tipos de feno encontrados
-                char tiposDeFeno[50][3]; // Assumindo que o tipo de feno pode ter até 2 caracteres
+                char tiposDeFeno[50][3];
                 int quantidadeDeTipos = 0;
                 int totalQuantity = 0;
 
-                current = prod; // Reiniciando a busca
+                current = prod;
                 while (current != NULL) {
                     if (strcmp(current->gzBundleType.cultivar, searchGzBundle) == 0) {
-                        // Verifica se o tipo de feno já foi registrado
                         int tipoJaRegistrado = 0;
                         for (int i = 0; i < quantidadeDeTipos; ++i) {
                             if (tiposDeFeno[i][0] == current->gzBundleType.bundleType) {
@@ -249,7 +237,6 @@ void getProduction(Production *prod) { //Consultar
                             }
                         }
 
-                        // Se não estiver registrado, registra
                         if (!tipoJaRegistrado) {
                             tiposDeFeno[quantidadeDeTipos][0] = current->gzBundleType.bundleType;
                             tiposDeFeno[quantidadeDeTipos][1] = '\0';
@@ -282,9 +269,6 @@ void getProduction(Production *prod) { //Consultar
             printf("Operação inválida, tente novamente!\n");
     }
 }
-
-
-//Inserir produção
 
 void findProductionByIdForDelete(Production *begin, int searchedId) {
     Production *current = begin;
